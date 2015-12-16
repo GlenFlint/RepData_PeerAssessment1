@@ -7,19 +7,32 @@ output:
 
 
 ## Loading and preprocessing the data
-
-
-
+```{r}
+activity <- read.csv("activity.csv")
+activity$date <- as.Date(activity$date)
+```
 ## What is mean total number of steps taken per day?
+```{r}
+plotdata <- tapply(activity$steps, activity$date, FUN = sum, na.rm=TRUE)
 
-
-
+barplot(plotdata, xlab = "Day", ylab="Total Steps")
+title("Total Steps Per Day")
+abline(h=mean(plotdata), col="red", lty=2)
+abline(h=median(plotdata), col="blue", lty=2)
+legend("top", c("Mean", "Median"), col=c("red", "blue"), lty =c(2,2))
+mean(plotdata)
+median(plotdata)
+```
 ## What is the average daily activity pattern?
+```{r}
+plotdata <- tapply(activity$steps, activity$interval, FUN = mean, na.rm=TRUE)
+barplot(plotdata, xlab="Time Interval", ylab="Average Steps")
+title("Average Daily Activity")
 
-
-
+which.max(plotdata)
+```
 ## Imputing missing values
-
-
-
+```{r}
+sum(!complete.cases(activity))
+```
 ## Are there differences in activity patterns between weekdays and weekends?
