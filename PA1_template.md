@@ -40,11 +40,11 @@ median(plotdata)
 
 ```r
 plotdata <- aggregate(steps ~ interval, activity, mean, na.rm = TRUE)
-mp <- barplot(plotdata$steps, names=plotdata$interval, 
+plot(plotdata$interval, plotdata$steps, type="l",
+        main="Average Daily Activity",
         xlab="Time Interval", ylab="Average Steps")
-mostSteps <- which.max(plotdata$steps)
-abline(v = mp[mostSteps], col="yellow", lty=2)
-title("Average Daily Activity")
+mostSteps <- plotdata$interval[which.max(plotdata$steps)]
+abline(v = mostSteps, col="green", lty=1)
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
@@ -52,7 +52,7 @@ title("Average Daily Activity")
 ### The most activity is at 8:35 in the morning
 
 ```r
-plotdata$interval[mostSteps]
+mostSteps
 ```
 
 ```
@@ -103,15 +103,18 @@ median(plotdata)
 ## Are there differences in activity patterns between weekdays and weekends?
 
 ```r
-averageSteps$day <- ifelse(grepl("^S", weekdays(averageSteps$date)), "weekend", "weekday")
+averageSteps$day <- ifelse(grepl("^S", weekdays(averageSteps$date)),
+                           "weekend", "weekday")
+
 averageSteps$day <- factor(averageSteps$day)
+
 plotdata <- aggregate(steps.x ~ interval + day, averageSteps, mean)
 
 library(ggplot2)
 p <- ggplot(data=plotdata, aes(x=interval, y=steps.x))
 p <- p + ggtitle("Average Daily Activity")
 p <- p + labs(x= "Time Interval", y = "Average Steps")
-p <- p + geom_bar(stat="identity")
+p <- p + geom_line()
 p <- p + facet_grid(day ~ .)
 p
 ```
@@ -122,13 +125,15 @@ p
 
 ```r
 weekday <- subset(plotdata, day == "weekday")
-barplot(weekday$steps.x, names=weekday$interval, xlab="Time Interval", ylab="Average Steps")
+plot(weekday$interval, weekday$steps.x, type="l",
+     main="Average Daily Activity on Weekdays", 
+     xlab="Time Interval", ylab="Average Steps")
 abline(h=mean(weekday$steps.x), col="red", lty=2)
 abline(h=median(weekday$steps.x), col="blue", lty=3)
-legend("topleft", c("Mean", "Median"), col=c("red", "blue"), lty =c(2,3))
-mostSteps <- which.max(weekday$steps.x)
-abline(v = mp[mostSteps], col="yellow", lty=2)
-title("Average Daily Activity on Weekdays")
+legend("topleft", c("Mean", "Median", "Most Steps"), 
+       col=c("red", "blue", "green"), lty =c(2,3, 1))
+mostSteps = weekday$interval[which.max(weekday$steps.x)]
+abline(v = mostSteps, col="green", lty=1)
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-7-1.png) 
@@ -136,7 +141,7 @@ title("Average Daily Activity on Weekdays")
 ### The most activity is at 8:35 in the morning
 
 ```r
-weekday$interval[mostSteps]
+mostSteps
 ```
 
 ```
@@ -171,13 +176,15 @@ sum(weekday$steps.x)
 
 ```r
 weekend <- subset(plotdata, day == "weekend")
-barplot(weekend$steps.x, names=weekend$interval, xlab="Time Interval", ylab="Average Steps")
+plot(weekend$interval, weekend$steps.x, type = "l",
+        main="Average Daily Activity on Weekends", 
+        xlab="Time Interval", ylab="Average Steps")
 abline(h=mean(weekend$steps.x), col="red", lty=2)
 abline(h=median(weekend$steps.x), col="blue", lty=3)
-legend("topleft", c("Mean", "Median"), col=c("red", "blue"), lty =c(2,3))
-mostSteps <- which.max(weekend$steps.x)
-abline(v = mp[mostSteps], col="yellow", lty=2)
-title("Average Daily Activity on Weekends")
+legend("topleft", c("Mean", "Median", "Most Steps"), 
+       col=c("red", "blue", "green"), lty =c(2,3, 1))
+mostSteps = weekend$interval[which.max(weekend$steps.x)]
+abline(v = mostSteps, col="green", lty=1)
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-9-1.png) 
@@ -185,7 +192,7 @@ title("Average Daily Activity on Weekends")
 ### The most activity is at 9:15 in the morning
 
 ```r
-weekend$interval[mostSteps]
+mostSteps
 ```
 
 ```
@@ -214,4 +221,40 @@ sum(weekend$steps.x)
 
 ```
 ## [1] 12201.52
+```
+
+## It's interesting to compare activity throughout the week.
+
+```r
+averageSteps$day <- weekdays(averageSteps$dat)
+averageSteps$day <- factor(averageSteps$day, ordered=TRUE,
+   levels=c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", 
+            "Saturday", "Sunday"))
+
+plotdata <- aggregate(steps.x ~ interval + day, averageSteps, mean)
+
+library(ggplot2)
+p <- ggplot(data=plotdata, aes(x=interval, y=steps.x))
+p <- p + ggtitle("Average Daily Activity")
+p <- p + labs(x= "Time Interval", y = "Average Steps")
+p <- p + geom_line()
+p <- p + facet_grid(day ~ .)
+p
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-11-1.png) 
+
+```r
+aggregate(steps.x ~ day, plotdata, sum)
+```
+
+```
+##         day   steps.x
+## 1    Monday 10150.709
+## 2   Tuesday  8949.556
+## 3 Wednesday 11676.910
+## 4  Thursday  8496.465
+## 5    Friday 12005.597
+## 6  Saturday 12314.274
+## 7    Sunday 12088.774
 ```
