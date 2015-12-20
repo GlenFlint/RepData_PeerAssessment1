@@ -38,6 +38,7 @@ title("Average Daily Activity")
 plotdata$interval[mostSteps]
 ```
 ## Imputing missing values
+### Replace missing values with the average number of steps calculated for the corresponding time interval.
 ```{r}
 sum(!complete.cases(activity))
 averageSteps <- merge(activity, plotdata, by="interval")

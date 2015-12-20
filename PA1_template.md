@@ -59,6 +59,7 @@ plotdata$interval[mostSteps]
 ## [1] 835
 ```
 ## Imputing missing values
+### Replace missing values with the average number of steps calculated for the corresponding time interval.
 
 ```r
 sum(!complete.cases(activity))

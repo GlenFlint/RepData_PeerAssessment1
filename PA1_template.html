@@ -101,6 +101,8 @@ title(&quot;Average Daily Activity&quot;)</code></pre>
 </div>
 <div id="imputing-missing-values" class="section level2">
 <h2>Imputing missing values</h2>
+<div id="replace-missing-values-with-the-average-number-of-steps-calculated-for-the-corresponding-time-interval." class="section level3">
+<h3>Replace missing values with the average number of steps calculated for the corresponding time interval.</h3>
 <pre class="r"><code>sum(!complete.cases(activity))</code></pre>
 <pre><code>## [1] 2304</code></pre>
 <pre class="r"><code>averageSteps &lt;- merge(activity, plotdata, by=&quot;interval&quot;)
@@ -117,6 +119,7 @@ legend(&quot;top&quot;, c(&quot;Mean&quot;, &quot;Median&quot;), col=c(&quot;red
 <pre><code>## [1] 10766.19</code></pre>
 <pre class="r"><code>median(plotdata)</code></pre>
 <pre><code>## [1] 10766.19</code></pre>
+</div>
 <div id="the-mean-and-the-median-are-now-equal-and-slightly-larger-than-the-mean-and-median-calculated-for-the-original-data." class="section level3">
 <h3>The mean and the median are now equal and slightly larger than the mean and median calculated for the original data.</h3>
 </div>
